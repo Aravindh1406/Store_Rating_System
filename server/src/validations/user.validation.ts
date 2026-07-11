@@ -30,3 +30,57 @@ export const createUserSchema = Joi.object({
         .required()
 
 });
+
+export const submitRatingSchema = Joi.object({
+
+    storeId: Joi.number()
+
+        .required(),
+
+    rating: Joi.number()
+
+        .integer()
+
+        .min(1)
+
+        .max(5)
+
+        .required()
+
+});
+
+export const updateRatingSchema = Joi.object({
+
+    rating: Joi.number()
+
+        .integer()
+
+        .min(1)
+
+        .max(5)
+
+        .required()
+
+});
+
+export const changePasswordSchema = Joi.object({
+
+    oldPassword: Joi.string()
+
+        .required(),
+
+    newPassword: Joi.string()
+
+        .min(8)
+
+        .max(16)
+
+        .pattern(
+
+            /^(?=.*[A-Z])(?=.*[\W_]).+$/
+
+        )
+
+        .required()
+
+});

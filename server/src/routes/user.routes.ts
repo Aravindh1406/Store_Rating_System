@@ -6,25 +6,91 @@ import {
 
 } from "../middlewares/auth.middleware";
 
+import {
+
+    authorize
+
+} from "../middlewares/role.middleware";
+
+import {
+
+    getStores,
+
+    submitRating,
+
+    updateRating,
+
+    changePassword
+
+} from "../controllers/user.contoller";
+
+import {
+
+    validate
+
+} from "../middlewares/validation.middleware";
+
+import {
+
+    submitRatingSchema,
+
+    updateRatingSchema,
+
+    changePasswordSchema
+
+} from "../validations/user.validation";
+
+import {
+
+    UserRole
+
+} from "../constants/roles";
+
 const router = Router();
 
-router.get(
-
-    "/profile",
+router.use(
 
     authenticate,
 
-    (req, res) => {
+    authorize(UserRole.USER)
 
-        res.json({
+);
 
-            success: true,
+router.get(
 
-            user: req.user
+    "/stores",
 
-        });
+    getStores
 
-    }
+);
+
+router.post(
+
+    "/rating",
+
+    validate(submitRatingSchema),
+
+    submitRating
+
+);
+
+router.put(
+
+    "/rating/:storeId",
+
+    validate(updateRatingSchema),
+
+    updateRating
+
+);
+
+router.put(
+
+    "/change-password",
+
+    validate(changePasswordSchema),
+
+    changePassword
 
 );
 
