@@ -1,6 +1,6 @@
-import User from "./user";
-import Store from "./store";
-import Rating from "./rating";
+import User from "./User";
+import Store from "./Store";
+import Rating from "./Rating";
 
 User.hasMany(Store, {
     foreignKey: "ownerId",
