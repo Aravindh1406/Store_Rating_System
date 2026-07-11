@@ -1,19 +1,16 @@
-    import app from "./app";
-    import { connectDB } from "./config/database";
-    import { env } from "./config/env";
+import "./models/associations";
+import app from "./app";
 
-    const startServer = async () => {
+import { connectDB } from "./config/database";
 
-        await connectDB();
+import { env } from "./config/env";
 
-        app.listen(env.PORT, () => {
+const startServer = async () => {
+  await connectDB();
 
-            console.log(
-                `Server Running on http://localhost:${env.PORT}`
-            );
+  app.listen(env.PORT, () => {
+    console.log(`Server Running on http://localhost:${env.PORT}`);
+  });
+};
 
-        });
-
-    };
-
-    startServer();
+startServer();
