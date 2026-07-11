@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { AuthUser } from "../types/jwt";
 import jwt from "jsonwebtoken";
 
 import { env } from "../config/env";
@@ -32,29 +33,26 @@ export const authenticate = (
     try {
 
         const decoded = jwt.verify(
-
             token,
-
             env.JWT_SECRET
+        ) as AuthUser;
 
-        );
+req.user = decoded;
 
-        (req as any).user = decoded;
-
-        next();
+next();
 
     }
 
     catch {
 
-        return res.status(401).json({
+    return res.status(401).json({
 
-            success: false,
+        success: false,
 
-            message: "Invalid Token"
+        message: "Invalid Token"
 
-        });
+    });
 
-    }
+}
 
 };

@@ -3,6 +3,7 @@ import adminRepository from "../repositories/admin.repository";
 import { hashPassword } from "../utils/bcrypt";
 
 import { UserRole } from "../constants/roles";
+import { Store } from "../models";
 
 class AdminService {
 
@@ -86,6 +87,16 @@ class AdminService {
 
             );
 
+        }
+
+        const existingStore = await Store.findOne({
+            where: {
+                ownerId: data.ownerId
+            }
+        });
+
+        if (existingStore) {
+            throw new Error("Store owner already owns a store");
         }
 
         return adminRepository.createStore(

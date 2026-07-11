@@ -2,7 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/database";
 
 class Store extends Model {
-  public id?: number;
+  public id!: number;
   public name!: string;
   public email!: string;
   public address!: string;
