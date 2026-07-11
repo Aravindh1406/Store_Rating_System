@@ -1,41 +1,53 @@
 import { Router } from "express";
 
-import {
+import adminController from "../controllers/admin.controller";
 
-    authenticate
+import { authenticate } from "../middlewares/auth.middleware";
 
-} from "../middlewares/auth.middleware";
-
-import {
-
-    authorize
-
-} from "../middlewares/role.middleware";
+import { authorize } from "../middlewares/role.middleware";
 
 import { UserRole } from "../constants/roles";
 
 const router = Router();
 
-router.get(
-
-    "/dashboard",
-
+router.use(
     authenticate,
+    authorize(UserRole.ADMIN)
+);
 
-    authorize(UserRole.ADMIN),
+router.get(
+    "/dashboard",
+    adminController.dashboard
+);
 
-    (req, res) => {
+router.post(
+    "/users",
+    adminController.createUser
+);
 
-        res.json({
+router.post(
+    "/stores",
+    adminController.createStore
+);
 
-            success: true,
+router.get(
+    "/users",
+    adminController.getUsers
+);
 
-            message: "Welcome Admin"
+router.get(
+    "/stores",
+    adminController.getStores
+);
 
-        });
+router.get(
+    "/users/:id",
+    adminController.getUserDetails
+);
 
-    }
-
+router.get(
+    "/stores/:id",
+    adminController.getStoreDetails
 );
 
 export default router;
