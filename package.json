@@ -1,6 +1,10 @@
 {
   "dependencies": {
-    "cors": "^2.8.6"
+    "@hookform/resolvers": "^5.4.0",
+    "cors": "^2.8.6",
+    "react-hook-form": "^7.81.0",
+    "react-hot-toast": "^2.6.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19"

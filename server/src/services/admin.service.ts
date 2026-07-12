@@ -229,6 +229,12 @@ class AdminService {
 
     }
 
+    async getStoreOwners() {
+
+        return adminRepository.getStoreOwners();
+
+    }
+
 }
 
 export default new AdminService();

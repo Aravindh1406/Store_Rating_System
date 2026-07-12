@@ -7,6 +7,7 @@ import {
     // Navigate
 
 } from "react-router-dom";
+import AdminLayout from "../layouts/AdminLayout";
 
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
@@ -20,6 +21,9 @@ import NotFound from "../pages/Error/NotFound";
 import ProtectedRoute from "./ProtectedRoutes";
 
 import AuthLayout from "../layouts/AuthLayout";
+import UserDetails from "../pages/Admin/UserDetails";
+import Users from "../pages/Admin/User";
+import Stores from "../pages/Admin/Stores";
 
 function AppRoutes() {
 
@@ -48,20 +52,33 @@ function AppRoutes() {
             </Route>
 
             <Route
-
                 path="/admin"
-
                 element={
-
                     <ProtectedRoute role="ADMIN">
-
-                        <AdminDashboard />
-
+                        <AdminLayout />
                     </ProtectedRoute>
-
                 }
+            >
+                <Route index element={<AdminDashboard />} />
 
-            />
+                <Route
+                    path="users"
+                    element={<Users />}
+                />
+
+                <Route
+                    path="users/:id"
+                    element={<UserDetails />}
+                />
+
+                <Route
+
+                    path="stores"
+
+                    element={<Stores />}
+
+                />
+            </Route>
 
             <Route
 

@@ -1,5 +1,5 @@
 import { Op, fn, col } from "sequelize";
-import User from "../models/User";
+import User, { UserRole } from "../models/User";
 import Store from "../models/Store";
 import Rating from "../models/Rating";
 
@@ -87,7 +87,13 @@ class AdminRepository {
 
             limit = 10,
 
-            search = "",
+            name = "",
+
+            email = "",
+
+            address = "",
+
+            role = "",
 
             sortBy = "name",
 
@@ -95,59 +101,49 @@ class AdminRepository {
 
         } = query;
 
-        const offset = (page - 1) * limit;
-
-        const where = {
-
-            [Op.or]: [
-
-                {
-
-                    name: {
-
-                        [Op.like]: `%${search}%`
-
-                    }
-
-                },
-
-                {
-
-                    email: {
-
-                        [Op.like]: `%${search}%`
-
-                    }
-
-                },
-
-                {
-
-                    address: {
-
-                        [Op.like]: `%${search}%`
-
-                    }
-
-                },
-
-                {
-
-                    role: {
-
-                        [Op.like]: `%${search}%`
-
-                    }
-
-                }
-
-            ]
-
-        };
+        const offset = (Number(page) - 1) * Number(limit);
 
         return User.findAndCountAll({
 
-            where,
+            where: {
+
+                ...(name && {
+
+                    name: {
+
+                        [Op.like]: `%${name}%`
+
+                    }
+
+                }),
+
+                ...(email && {
+
+                    email: {
+
+                        [Op.like]: `%${email}%`
+
+                    }
+
+                }),
+
+                ...(address && {
+
+                    address: {
+
+                        [Op.like]: `%${address}%`
+
+                    }
+
+                }),
+
+                ...(role && {
+
+                    role
+
+                })
+
+            },
 
             limit: Number(limit),
 
@@ -188,7 +184,11 @@ class AdminRepository {
 
             limit = 10,
 
-            search = "",
+            name = "",
+
+            email = "",
+
+            address = "",
 
             sortBy = "name",
 
@@ -196,109 +196,59 @@ class AdminRepository {
 
         } = query;
 
-        const offset = (page - 1) * limit;
+        const offset = (Number(page) - 1) * Number(limit);
 
         return Store.findAndCountAll({
 
-            subQuery: false,
-
             where: {
 
-                [Op.or]: [
+                ...(name && {
 
-                    {
+                    name: {
 
-                        name: {
-
-                            [Op.like]: `%${search}%`
-
-                        }
-
-                    },
-
-                    {
-
-                        email: {
-
-                            [Op.like]: `%${search}%`
-
-                        }
-
-                    },
-
-                    {
-
-                        address: {
-
-                            [Op.like]: `%${search}%`
-
-                        }
+                        [Op.like]: `%${name}%`
 
                     }
 
-                ]
+                }),
+
+                ...(email && {
+
+                    email: {
+
+                        [Op.like]: `%${email}%`
+
+                    }
+
+                }),
+
+                ...(address && {
+
+                    address: {
+
+                        [Op.like]: `%${address}%`
+
+                    }
+
+                })
 
             },
 
-            // include: [
+            limit: Number(limit),
 
-            //     {
+            offset,
 
-            //         model: Rating,
-            //         as: "ratings",
-            //         attributes: []
+            order: [
 
-            //     }
+                [
 
-            // ],
+                    sortBy,
 
-            // attributes: {
+                    order
 
-            //     include: [
+                ]
 
-            //         [
-
-            //             fn(
-
-            //                 "AVG",
-
-            //                 col(
-
-            //                     "ratings.rating"
-
-            //                 )
-
-            //             ),
-
-            //             "rating"
-
-            //         ]
-
-            //     ]
-
-            // },
-
-            // group: [
-
-            //     "Store.id"
-
-            // ],
-
-            // limit: Number(limit),
-
-            // offset,
-
-            // order: [
-
-            //     [
-
-            //         sortBy,
-
-            //         order
-
-            //     ]
-
-            // ]
+            ]
 
         });
 
@@ -427,33 +377,55 @@ class AdminRepository {
 
     }
 
-async getAverageRating(storeId: number): Promise<AverageRating | null> {
+    async getAverageRating(storeId: number): Promise<AverageRating | null> {
 
-    return Rating.findOne({
+        return Rating.findOne({
 
-        attributes: [
+            attributes: [
 
-            [
+                [
 
-                fn("AVG", col("rating")),
+                    fn("AVG", col("rating")),
 
-                "averageRating"
+                    "averageRating"
+
+                ]
+
+            ],
+
+            where: {
+
+                storeId
+
+            },
+
+            raw: true
+
+        }) as Promise<AverageRating | null>;
+
+    }
+
+    async getStoreOwners() {
+
+        return User.findAll({
+
+            where: {
+
+                role: UserRole.STORE_OWNER
+
+            },
+
+            attributes: [
+
+                "id",
+
+                "name"
 
             ]
 
-        ],
+        });
 
-        where: {
-
-            storeId
-
-        },
-
-        raw: true
-
-    }) as Promise<AverageRating | null>;
-
-}
+    }
 }
 
 export default new AdminRepository();

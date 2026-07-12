@@ -192,6 +192,44 @@ class AdminController {
 
     }
 
+    async getStoreOwners(
+
+        req: Request,
+
+        res: Response,
+
+        next: NextFunction
+
+    ) {
+
+        try {
+
+            const owners = await adminService.getStoreOwners();
+
+            return sendResponse(
+
+                res,
+
+                200,
+
+                true,
+
+                "Owners fetched successfully",
+
+                owners
+
+            );
+
+        }
+
+        catch (error) {
+
+            next(error);
+
+        }
+
+    }
+
 }
 
 export default new AdminController();

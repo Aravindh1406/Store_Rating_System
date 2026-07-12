@@ -49,5 +49,12 @@ router.get(
     "/stores/:id",
     adminController.getStoreDetails
 );
+router.get(
+
+    "/store-owners",
+
+    adminController.getStoreOwners
+
+);
 
 export default router;
